@@ -1,3 +1,7 @@
+plugins {
+    id 'com.google.cloud.artifactregistry.gradle-plugin' version '2.2.0'
+}
+
 allprojects {
     apply plugin: 'jacoco'
 
@@ -10,6 +14,7 @@ subprojects {
     apply plugin: 'java-library'
     apply plugin: 'groovy'
     apply plugin: 'maven-publish'
+    apply plugin: 'com.google.cloud.artifactregistry.gradle-plugin'
 
     java {
         sourceCompatibility = JavaVersion.VERSION_1_8
@@ -21,7 +26,7 @@ subprojects {
 
     group = 'org.cadixdev'
     archivesBaseName = project.name.toLowerCase()
-    version = '0.5.0-SNAPSHOT'
+    version = '0.5.0'
 
     repositories {
         mavenCentral()
@@ -95,17 +100,8 @@ subprojects {
             }
         }
         repositories {
-            if (project.hasProperty('ossrhUsername') && project.hasProperty('ossrhPassword')) {
-                maven {
-                    url = !version.endsWith('-SNAPSHOT') ?
-                            'https://oss.sonatype.org/service/local/staging/deploy/maven2/' :
-                            'https://oss.sonatype.org/content/repositories/snapshots/'
-
-                    credentials {
-                        username = ossrhUsername
-                        password = ossrhPassword
-                    }
-                }
+            maven {
+                url "artifactregistry://us-maven.pkg.dev/moonsworth-299m4oir/maven-public"
             }
         }
     }
